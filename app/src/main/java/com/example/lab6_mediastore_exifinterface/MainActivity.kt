@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                     exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF),
                     exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE),
                     exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF),
-                    exif.getAttribute(ExifInterface.TAG_DEVICE_SETTING_DESCRIPTION),
+                    exif.getAttribute(ExifInterface.TAG_MAKE),
                     exif.getAttribute(ExifInterface.TAG_MODEL),
                 )
                 findViewById<TextView>(R.id.exifTagsLabel).text = data.toStringPretty()
