@@ -12,11 +12,11 @@
         android:layout_height="wrap_content"
         android:text="@string/next"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonUploadImg"
-        app:layout_constraintHorizontal_bias="0.326"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.578" />
+        app:layout_constraintVertical_bias="0.59" />
 
     <Button
         android:id="@+id/buttonUploadImg"
@@ -26,10 +26,9 @@
         android:text="Upload"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.852"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.006" />
+        app:layout_constraintVertical_bias="0.555" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -42,5 +41,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.071"
         tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/exifTagsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No exif tags"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_first"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

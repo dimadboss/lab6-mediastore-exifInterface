@@ -3,18 +3,25 @@ package com.example.lab6_mediastore_exifinterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Debug
 import android.provider.MediaStore
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.exifinterface.media.ExifInterface
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.lab6_mediastore_exifinterface.data.ExifData
+import com.example.lab6_mediastore_exifinterface.data.toStringPretty
 import com.example.lab6_mediastore_exifinterface.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,6 +88,36 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
             imageView.setImageURI(imageUri)
+            loadExifInfo()
+        }
+    }
+
+    private fun loadExifInfo() {
+        val tag = "loadExifInfo"
+        if (imageUri == null) {
+            Log.e(tag, "imageUri was null")
+            return
+        }
+        try {
+            this.contentResolver.openInputStream(imageUri!!).use { inputStream ->
+                val exif = inputStream?.let { ExifInterface(it) }
+                if (exif == null) {
+                    Log.e(tag, "exif was null")
+                    return
+                }
+                val data = ExifData(
+                    exif.getAttribute(ExifInterface.TAG_DATETIME),
+                    exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE),
+                    exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF),
+                    exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE),
+                    exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF),
+                    exif.getAttribute(ExifInterface.TAG_DEVICE_SETTING_DESCRIPTION),
+                    exif.getAttribute(ExifInterface.TAG_MODEL),
+                )
+                findViewById<TextView>(R.id.exifTagsLabel).text = data.toStringPretty()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 }
