@@ -1,6 +1,9 @@
 package com.example.lab6_mediastore_exifinterface
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -9,12 +12,20 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.ImageView
 import com.example.lab6_mediastore_exifinterface.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+
+    lateinit var imageView: ImageView
+    lateinit var button: Button
+    private val pickImage = 100
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +42,14 @@ class MainActivity : AppCompatActivity() {
         binding.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+        }
+
+
+        imageView = findViewById(R.id.imageView)
+        button = findViewById(R.id.buttonUploadImg)
+        button.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, pickImage)
         }
     }
 
@@ -54,5 +73,14 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == pickImage) {
+            imageUri = data?.data
+            imageView.setImageURI(imageUri)
+        }
     }
 }
