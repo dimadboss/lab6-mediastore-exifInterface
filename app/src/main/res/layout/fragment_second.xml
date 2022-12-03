@@ -6,22 +6,79 @@
     android:layout_height="match_parent"
     tools:context=".SecondFragment">
 
-    <TextView
-        android:id="@+id/textview_second"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/button_second"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/button_second"
+        android:layout_margin="10pt"
+        android:text="@string/previous"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editModel" />
+
+    <EditText
+        android:id="@+id/editDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10pt"
+        android:ems="10"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:text="date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_second"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editLatitude"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/previous"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="10pt"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        android:text="latitude"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_second" />
+        app:layout_constraintTop_toBottomOf="@+id/editDate" />
+
+    <EditText
+        android:id="@+id/editLongitude"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10pt"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp"
+        android:text="longtitude"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editLatitude" />
+
+    <EditText
+        android:id="@+id/editDevice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10pt"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:text="device"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editLongitude" />
+
+    <EditText
+        android:id="@+id/editModel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10pt"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:text="model"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editDevice" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
