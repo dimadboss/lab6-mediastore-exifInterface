@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
 
-    lateinit var imageView: ImageView
     lateinit var button: Button
     private val pickImage = 100
     private var imageUri: Uri? = null
@@ -37,6 +36,15 @@ class MainActivity : AppCompatActivity() {
 
     fun getExifData(): ExifData? {
         return exifData
+    }
+
+    fun getImageUri(): Uri? {
+        return imageUri
+    }
+
+    fun onUploadClick() {
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(gallery, pickImage)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,11 +65,9 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        imageView = findViewById(R.id.imageView)
         button = findViewById(R.id.buttonUploadImg)
         button.setOnClickListener {
-            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-            startActivityForResult(gallery, pickImage)
+            onUploadClick()
         }
     }
 
@@ -92,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == pickImage) {
             imageUri = data?.data
-            imageView.setImageURI(imageUri)
+            findViewById<ImageView>(R.id.imageView).setImageURI(imageUri)
             loadExifInfo()
         }
     }
