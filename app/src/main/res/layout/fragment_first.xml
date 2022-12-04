@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No exif tags"
-        android:textColor="@color/black"
+        android:textColor="@color/purple_500"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/button_first"
         app:layout_constraintEnd_toEndOf="parent"

@@ -33,7 +33,11 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            val mainActivity = activity as MainActivity
+            val exifData = mainActivity.getExifData()
+            val bundle = Bundle()
+            bundle.putParcelable("ExifTags", exifData)
+            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundle)
         }
     }
 

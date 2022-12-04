@@ -1,11 +1,14 @@
 package com.example.lab6_mediastore_exifinterface
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.lab6_mediastore_exifinterface.data.ExifData
+import com.example.lab6_mediastore_exifinterface.data.getGeo
 import com.example.lab6_mediastore_exifinterface.databinding.FragmentSecondBinding
 
 /**
@@ -35,6 +38,22 @@ class SecondFragment : Fragment() {
         binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
+
+        val exifData = arguments?.getParcelable<ExifData?>("ExifTags") ?: return
+
+        if (exifData.date != null) {
+            binding.editDate.setText(exifData.date)
+        }
+        if (exifData.model != null) {
+            binding.editModel.setText(exifData.model)
+        }
+        if (exifData.device != null) {
+            binding.editDevice.setText(exifData.device)
+        }
+
+        val geo = exifData.getGeo() ?: return
+        binding.editLatitude.setText(geo.latitude.toString())
+        binding.editLongitude.setText(geo.longitude.toString())
     }
 
     override fun onDestroyView() {

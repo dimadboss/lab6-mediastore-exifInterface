@@ -1,14 +1,19 @@
 package com.example.lab6_mediastore_exifinterface.data
 
-data class ExifData(
-    var date: String?,
-    var latitude: String?,
-    var latitudeRef: String?,
-    var longitude: String?,
-    var longitudeRef: String?,
-    var device: String?,
-    var model: String?,
-)
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+
+@Parcelize
+open class ExifData(
+    val date: String? = null,
+    val latitude: String? = null,
+    val latitudeRef: String? = null,
+    val longitude: String? = null,
+    val longitudeRef: String? = null,
+    val device: String? = null,
+    val model: String? = null,
+) : Parcelable
 
 data class Geo(
     val latitude: Float,
@@ -26,8 +31,8 @@ fun ExifData.getGeo(): Geo? {
     if (latitude == null || longitude == null) {
         return null
     }
-    val latitudeDegrees = convertToDegree(latitude!!)
-    val longitudeDegrees = convertToDegree(longitude!!)
+    val latitudeDegrees = convertToDegree(latitude)
+    val longitudeDegrees = convertToDegree(longitude)
 
     return Geo(
         if (latitudeRef == "N") latitudeDegrees else -latitudeDegrees,
@@ -35,7 +40,10 @@ fun ExifData.getGeo(): Geo? {
     )
 }
 
-fun ExifData.toStringPretty(): String {
+fun ExifData?.toStringPretty(): String {
+    if (this == null) {
+        return "no exif data"
+    }
     return """
         date: ${date ?: "N/A"}
         device: ${device ?: "N/A"}
@@ -64,13 +72,3 @@ private fun convertToDegree(stringDMS: String): Float {
 
     return d + m / 60 + s / 3600
 }
-
-//fun EmptyExifData(): ExifData {
-//    return ExifData(
-//        null,
-//        null,
-//        null,
-//        null,
-//        null,
-//    )
-//}

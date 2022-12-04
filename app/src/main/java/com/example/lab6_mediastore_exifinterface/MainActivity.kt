@@ -33,6 +33,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var button: Button
     private val pickImage = 100
     private var imageUri: Uri? = null
+    private var exifData: ExifData? = null
+
+    fun getExifData(): ExifData? {
+        return exifData
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                     Log.e(tag, "exif was null")
                     return
                 }
-                val data = ExifData(
+                exifData = ExifData(
                     exif.getAttribute(ExifInterface.TAG_DATETIME),
                     exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE),
                     exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF),
@@ -114,7 +119,7 @@ class MainActivity : AppCompatActivity() {
                     exif.getAttribute(ExifInterface.TAG_MAKE),
                     exif.getAttribute(ExifInterface.TAG_MODEL),
                 )
-                findViewById<TextView>(R.id.exifTagsLabel).text = data.toStringPretty()
+                findViewById<TextView>(R.id.exifTagsLabel).text = exifData.toStringPretty()
             }
         } catch (e: IOException) {
             e.printStackTrace()

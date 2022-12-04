@@ -24,5 +24,10 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <argument
+            android:name="ExifTags"
+            app:argType="com.example.lab6_mediastore_exifinterface.data.ExifData"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>
