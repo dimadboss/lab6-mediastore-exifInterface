@@ -1,9 +1,11 @@
 package com.example.lab6_mediastore_exifinterface
 
+import android.app.Activity
+import android.app.RecoverableSecurityException
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.Debug
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
@@ -11,14 +13,15 @@ import android.view.MenuItem
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.exifinterface.media.ExifInterface
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.lab6_mediastore_exifinterface.data.ExifData
-import com.example.lab6_mediastore_exifinterface.data.toStringPretty
+import com.example.lab6_mediastore_exifinterface.data.*
 import com.example.lab6_mediastore_exifinterface.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 import java.io.IOException
@@ -33,6 +36,9 @@ class MainActivity : AppCompatActivity() {
     private val pickImage = 100
     private var imageUri: Uri? = null
     private var exifData: ExifData? = null
+
+    private lateinit var newExifData: ExifData
+    private var newGeo: Geo? = null
 
     fun getExifData(): ExifData? {
         return exifData
@@ -125,10 +131,67 @@ class MainActivity : AppCompatActivity() {
                     exif.getAttribute(ExifInterface.TAG_MAKE),
                     exif.getAttribute(ExifInterface.TAG_MODEL),
                 )
+                Log.i(
+                    tag,
+                    "get location ${exifData?.latitude} ${exifData?.longitude} -> ${
+                        exifData?.getGeo().toString()
+                    }"
+                )
                 findViewById<TextView>(R.id.exifTagsLabel).text = exifData.toStringPretty()
             }
         } catch (e: IOException) {
             e.printStackTrace()
         }
     }
+
+    fun updateExifData(newExifData: ExifData, newGeo: Geo?) {
+        this.newExifData = newExifData
+        this.newGeo = newGeo
+        try {
+            writeExifData()
+        } catch (securityException: SecurityException) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                throw securityException
+            }
+            val recoverableSecurityException =
+                securityException as? RecoverableSecurityException ?: throw securityException
+            val intentSender = recoverableSecurityException.userAction.actionIntent.intentSender
+            requestUri.launch(IntentSenderRequest.Builder(intentSender).build())
+        }
+    }
+
+    private var requestUri =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            if (result != null && result.resultCode == Activity.RESULT_OK) {
+                writeExifData()
+            }
+        }
+
+
+    private fun writeExifData() {
+        val tag = "writeExifData"
+        if (imageUri == null) {
+            Log.e(tag, "imageUri was null")
+            return
+        }
+        applicationContext.contentResolver.openFileDescriptor(imageUri!!, "rw", null)?.use {
+            val exif = ExifInterface(it.fileDescriptor)
+
+            if (newExifData.date != null) {
+                exif.setAttribute(ExifInterface.TAG_DATETIME, newExifData.date)
+            }
+            if (newExifData.device != null) {
+                exif.setAttribute(ExifInterface.TAG_MAKE, newExifData.device)
+            }
+            if (newExifData.model != null) {
+                exif.setAttribute(ExifInterface.TAG_MODEL, newExifData.model)
+            }
+            if (newGeo != null) {
+                Log.i(tag, "saving location ${newGeo.toString()}")
+                exif.setLatLong(newGeo!!.latitude, newGeo!!.longitude)
+            }
+            exif.saveAttributes()
+        }
+    }
+
 }
