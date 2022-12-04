@@ -24,7 +24,7 @@ fun Geo?.toString(): String {
     if (this == null) {
         return "N/A"
     }
-    return "($latitude, $longitude)"
+    return "(${String.format("%.3f", latitude)}, ${String.format("%.3f", longitude)})"
 }
 
 fun ExifData.getGeo(): Geo? {

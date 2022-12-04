@@ -17,6 +17,7 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.exifinterface.media.ExifInterface
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -24,7 +25,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.lab6_mediastore_exifinterface.data.*
 import com.example.lab6_mediastore_exifinterface.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.IOException
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,11 +70,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
 
 
         button = findViewById(R.id.buttonUploadImg)
@@ -190,8 +191,16 @@ class MainActivity : AppCompatActivity() {
                 Log.i(tag, "saving location ${newGeo.toString()}")
                 exif.setLatLong(newGeo!!.latitude, newGeo!!.longitude)
             }
-            exif.saveAttributes()
+            lifecycleScope.launch {
+                updating(exif)
+            }
         }
+    }
+
+    private suspend fun updating(exif: ExifInterface) {
+        exif.saveAttributes()
+        delay(1000L)
+        loadExifInfo()
     }
 
 }

@@ -60,8 +60,8 @@ class SecondFragment : Fragment() {
         }
 
         val geo = exifData!!.getGeo() ?: return
-        binding.editLatitude.setText(geo.latitude.toString())
-        binding.editLongitude.setText(geo.longitude.toString())
+        binding.editLatitude.setText(String.format("%.3f", geo.latitude))
+        binding.editLongitude.setText(String.format("%.3f", geo.longitude))
     }
 
     private fun updateExifData(view: View) {
